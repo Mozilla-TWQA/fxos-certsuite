@@ -368,7 +368,8 @@ def _run(args, logger):
         'webapi',
         'user-agent',
         'crash-reporter',
-        'search-id',
+        # disable search-id test
+        #'search-id',
         ]
     if args.list_test_groups:
         for t in test_groups:
@@ -666,33 +667,34 @@ def _run(args, logger):
         else:
             logger.test_end('crash-reporter', 'ERROR')
 
-    if 'search-id' in test_groups:
-        logger.test_start('search-id')
-        fxos_appgen.launch_app('browser')
+    # disable search-id test
+    # if 'search-id' in test_groups:
+    #     logger.test_start('search-id')
+    #     fxos_appgen.launch_app('browser')
 
-        script = """
-          result = window.wrappedJSObject.UrlHelper.getUrlFromInput('hello world');
-          return result;
-        """
+    #     script = """
+    #       result = window.wrappedJSObject.UrlHelper.getUrlFromInput('hello world');
+    #       return result;
+    #     """
 
-        m = marionette.Marionette('localhost', 2828)
-        m.start_session()
-        browser = m.find_element('css selector', 'iframe[src="app://search.gaiamobile.org/newtab.html"]')
-        m.switch_to_frame(browser)
-        url = m.execute_script(script)
-        m.delete_session()
+    #     m = marionette.Marionette('localhost', 2828)
+    #     m.start_session()
+    #     browser = m.find_element('css selector', 'iframe[src="app://search.gaiamobile.org/newtab.html"]')
+    #     m.switch_to_frame(browser)
+    #     url = m.execute_script(script)
+    #     m.delete_session()
 
-        report['search-oemid'] = url
+    #     report['search-oemid'] = url
 
-        oemid_rexp = re.compile('client=mobile-firefoxos&channel=fm:org.mozilla:([A-Z0-9.]+):official&')
+    #     oemid_rexp = re.compile('client=mobile-firefoxos&channel=fm:org.mozilla:([A-Z0-9.]+):official&')
 
-        match = oemid_rexp.match(url)
-        if match:
-            logger.test_status('search-id', 'oemid', 'PASS', message='oemid: %s' % match.groups()[0])
-        else:
-            logger.test_status('search-id', 'oemid', 'FAIL', message='no oemid found in url: %s' % url)
+    #     match = oemid_rexp.match(url)
+    #     if match:
+    #         logger.test_status('search-id', 'oemid', 'PASS', message='oemid: %s' % match.groups()[0])
+    #     else:
+    #         logger.test_status('search-id', 'oemid', 'FAIL', message='no oemid found in url: %s' % url)
 
-        logger.test_end('search-id', 'OK')
+    #     logger.test_end('search-id', 'OK')
 
     logger.suite_end()
 
